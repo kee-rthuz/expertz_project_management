@@ -1,0 +1,182 @@
+/* .popupStyle {
+    background-color: #fff;
+    padding: 30px;
+    width: 50%;
+    height: 60%;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 1px solid #858383;  
+}
+
+.closeIcon {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer; 
+  }
+
+  .inputField {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 2px solid #030303;
+    border-radius: 4px;
+    background-color: #8a5d5d;
+    font-size: 16px;
+    resize: none;
+    display: flex;
+    flex-grow: 1;   
+}
+
+
+.h3 {
+  font-size: 1.5em;
+  margin-bottom: 20px;
+  color: #000;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+} */
+
+/* Style for TextField components */
+/* .MuiTextField-root {
+  margin-bottom: 15px;
+} */
+
+/* Style for the CREATE button */
+/* .MuiButton-root {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.MuiButton-containedPrimary {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: #0056b3;
+}  */
+
+/* ------------------------------- */
+
+
+/* wrking */
+
+
+/* .popupStyle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  width: 50%;
+  height: 60%;
+  block-size: fit-content;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: #000;
+  font-size: 20px;
+}
+
+.h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+
+.TextField {
+  width: 100%;
+  margin-bottom: 15px;
+} */
+
+
+
+
+/* 2 */
+
+/* .popupStyle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 30px;
+  background-color: white;
+  border: 1px solid #000;
+  border-radius: 8px;
+  width: 50%;
+  height: 60%;
+  block-size: fit-content;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: black;
+  font-size: 20px;
+}
+
+.h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.inputField {
+  width: 100%;
+  margin-bottom: 15px;
+}
+
+ */
+
+/* -----  wrking  ------ */
+
+
+ /* .popupStyle {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  border: 1px solid #000;
+  max-height: 80vh; 
+  overflow-y: auto;
+}
+
+.closeIcon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.h3 {
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.TextField {
+  margin-bottom: 15px;
+  width: 100%;        
+}
+ */
