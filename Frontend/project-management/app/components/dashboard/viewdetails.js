@@ -762,7 +762,7 @@
 
 
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHourglass,
@@ -803,14 +803,17 @@ export default function ViewDetails({ project, onClose, onBid }) {
   const [editingSubtask, setEditingSubtask] = useState(null);
   const [showAssignDropdown, setShowAssignDropdown] = useState(null);
   const [notification, setNotification] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [teamMembers] = useState([
+  const [teamMembers, setTeamMembers] = useState([
     { id: 1, name: "John Doe" },
     { id: 2, name: "Jane Smith" },
     { id: 3, name: "Bob Johnson" },
     { id: 4, name: "Alice Williams" },
     { id: 5, name: "Charlie Brown" },
   ]);
+
+  const dropdownRef = useRef(null);
 
   const handleBidSubmit = () => {
     if (onBid) {
@@ -861,6 +864,7 @@ export default function ViewDetails({ project, onClose, onBid }) {
       setTasks((prevTasks) => [...prevTasks, taskData]);
     }
     fetchProjectSubTasks(taskData._id); // Fetch subtasks for the newly added task
+    window.location.reload(); // Refresh the page after editing the task
   };
 
   const handleTaskClick = (task) => {
@@ -956,6 +960,7 @@ export default function ViewDetails({ project, onClose, onBid }) {
       if (response.ok) {
         setCurrentProjectName(editedProjectName);
         setIsEditingProjectName(false);
+        localStorage.setItem(`projectName_${project._id}`, editedProjectName); // Store the project name in local storage
       } else {
         console.error("Failed to update project name");
       }
@@ -1080,7 +1085,8 @@ export default function ViewDetails({ project, onClose, onBid }) {
       });
 
       if (response.ok) {
-        fetchProjectTasks(project._id);
+        const data = await response.json();
+        handleTaskAdded(data, null); // Add the new task to the state
       } else {
         console.error("Failed to add quick task");
       }
@@ -1099,8 +1105,30 @@ export default function ViewDetails({ project, onClose, onBid }) {
   ];
 
   useEffect(() => {
+    const storedProjectName = localStorage.getItem(`projectName_${project._id}`);
+    if (storedProjectName) {
+      setCurrentProjectName(storedProjectName);
+      setEditedProjectName(storedProjectName);
+    } else {
+      setCurrentProjectName(project.projectName);
+      setEditedProjectName(project.projectName);
+    }
     fetchProjectTasks(project._id);
   }, [project]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowAssignDropdown(null);
+        setSearchQuery("");
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const fetchProjectTasks = async (projectId) => {
     try {
@@ -1255,17 +1283,27 @@ export default function ViewDetails({ project, onClose, onBid }) {
     });
   };
 
+  const handleSearchQueryChange = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredTeamMembers = teamMembers.filter(member =>
+    member.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="flex flex-col p-4 bg-[#c8d8e4] min-h-screen">
-      <div className="bg-white rounded-lg p-4 mb-4 w-full shadow-md">
-        <button
-          className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full sm:w-auto float-right"
+
+
+<div className="bg-white rounded-lg p-4 mb-4 w-full card flex justify-end items-center">        <button
+          className="bg-[#007bff] text-white py-2 px-4 rounded hover:bg-[#0056b3]"
           onClick={handleAddTask}
         >
           Add Task
         </button>
       </div>
-      <div className="bg-white rounded-lg p-4 w-full max-w-6xl mx-auto shadow-lg">
+
+      <div className="bg-white rounded-lg p-4 w-full max-w-6xl mx-auto shadow-lg overflow-y-auto md:overflow-y-visible max-h-[800px]">
         <div className="flex flex-col items-center mb-4">
           {isEditingProjectName ? (
             <div className="w-full">
@@ -1332,10 +1370,7 @@ export default function ViewDetails({ project, onClose, onBid }) {
                 projectId={project._id}
                 task={editingTask}
                 onClose={handleTaskFormClose}
-                onTaskAdded={(taskData, taskId) => {
-                  handleTaskAdded(taskData, taskId);
-                  window.location.reload(); // Refresh the page after editing the task
-                }}
+                onTaskAdded={handleTaskAdded}
                 onSubtaskCreated={handleSubtaskCreated}
               />
             </div>
@@ -1362,8 +1397,8 @@ export default function ViewDetails({ project, onClose, onBid }) {
           </div>
         )}
 
-        <div className="bg-gray-100 rounded-lg p-4">
-          <ul className="space-y-2">
+<div className="bg-gray-100 rounded-lg p-4 h-[calc(100vh-300px)] md:h-[380px] overflow-y-auto">
+<ul className="space-y-2">
             {tasks
               .filter((task) => task.statusIcon)
               .map((task) => (
@@ -1421,10 +1456,20 @@ export default function ViewDetails({ project, onClose, onBid }) {
 
                         {showAssignDropdown === task._id && (
                           <div
-                            className="absolute z-10 mt-1 w-[260px] h-[22vh] bg-white rounded-md  py-1 border border-gray-200"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            {teamMembers.map((member) => (
+  ref={dropdownRef}
+  className="absolute z-40 mt-1 w-full sm:w-[280px] h-[28vh] bg-white rounded-md py-1 border border-gray-200 shadow-lg"
+  onClick={(e) => e.stopPropagation()}
+>
+                            <div className="p-2">
+                              <TextField
+                                label="Search"
+                                value={searchQuery}
+                                onChange={handleSearchQueryChange}
+                                variant="outlined"
+                                fullWidth
+                              />
+                            </div>
+                            {filteredTeamMembers.map((member) => (
                               <button
                                 key={member.id}
                                 className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
@@ -1506,7 +1551,6 @@ export default function ViewDetails({ project, onClose, onBid }) {
                             <FontAwesomeIcon icon={faEdit} className="text-gray-600 text-sm" />
                           </button>
 
-
                           <button
                             className="p-1 rounded hover:bg-gray-200 ml-2"
                             onClick={(e) => {
@@ -1517,7 +1561,6 @@ export default function ViewDetails({ project, onClose, onBid }) {
                             <FontAwesomeIcon icon={faTrashAlt} className="text-gray-600 text-sm" />
                           </button>
 
-                          
                         </li>
                       ))}
                     </ul>
@@ -1567,6 +1610,13 @@ export default function ViewDetails({ project, onClose, onBid }) {
           </div>
         )}
       </div>
+
+
+      
     </div>
   );
 }
+
+
+
+

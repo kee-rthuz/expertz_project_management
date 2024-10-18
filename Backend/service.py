@@ -39,12 +39,13 @@ class UserService(BaseService):
                 return {'message': 'User already exists.'}, 400
 
             hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+            hashed_password_str = hashed_password.decode('utf-8')  # Convert to string
 
             new_user = {
                 'firstName': first_name,
                 'lastName': last_name,
                 'email': email,
-                'password': hashed_password,
+                'password': hashed_password_str,  # Store the string version
                 'created_at': datetime.datetime.utcnow()
             }
 
@@ -58,8 +59,9 @@ class UserService(BaseService):
                 self.secret_key,
                 algorithm='HS256'
             )
+            token_str = token.decode('utf-8')  # Ensure the token is a string
 
-            return {'message': 'Signup successful', 'user': inserted_user, 'token': token}, 201
+            return {'message': 'Signup successful', 'user': inserted_user, 'token': token_str}, 201
         except Exception as e:
             print(e)
             return {'message': 'Internal Server Error'}, 500
@@ -77,7 +79,8 @@ class UserService(BaseService):
             if not user:
                 return {'message': 'Invalid email or password.'}, 401
 
-            if not bcrypt.checkpw(password.encode('utf-8'), user['password']):
+            # Ensure both the input password and the stored hashed password are byte strings
+            if not bcrypt.checkpw(password.encode('utf-8'), user['password'].encode('utf-8')):
                 return {'message': 'Invalid email or password.'}, 401
 
             user['_id'] = str(user['_id'])
@@ -105,6 +108,9 @@ class UserService(BaseService):
         except Exception as e:
             print(f"Login error: {e}")
             return {'message': 'Internal Server Error'}, 500
+
+
+
     @rpc
     def logout_user(self, token):
         try:
@@ -575,6 +581,7 @@ class UserStoryService(BaseService):
         try:
             newuserstory = {
                 'user_id': str(data.get('user_id', '')),
+                'project_id': str(data.get('project_id', '')),  # Add project_id field
                 'subject': data.get('subject', ''),
                 'description': data.get('description', ''),
                 'tags': data.get('tags', []),
@@ -591,9 +598,9 @@ class UserStoryService(BaseService):
             return {'error': 'Internal Server Error'}, 500
 
     @rpc
-    def get_newuserstory(self):
+    def get_newuserstory(self, project_id):
         try:
-            newuserstories = list(self.newuserstory_collection.find())
+            newuserstories = list(self.newuserstory_collection.find({'project_id': project_id}))
             for userstory in newuserstories:
                 userstory['_id'] = str(userstory['_id'])
             return newuserstories, 200
@@ -605,15 +612,15 @@ class UserStoryService(BaseService):
     def update_newuserstory(self, user_id, data):
         try:
             update_fields = {}
-            
+
             if 'subject' in data:
                 update_fields['subject'] = data.get('subject', '')
             if 'status' in data:
                 update_fields['status'] = data.get('status', '')
-            
+
             if update_fields:
                 result = self.newuserstory_collection.update_one({'user_id': user_id}, {'$set': update_fields})
-            
+
                 if result.matched_count > 0:
                     return {'message': 'Newuserstory updated successfully'}, 200
                 else:

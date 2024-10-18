@@ -30,6 +30,11 @@ def signup():
 def login():
     data = request.get_json()
     try:
+        print(f"Received data: {data}")  # Log received data for debugging
+
+        if not data or 'email' not in data or 'password' not in data:
+            return make_response(jsonify({"message": "Please fill in all fields."}), 400)
+
         with ClusterRpcProxy(CONFIG) as rpc:
             response, status_code = rpc.user_service.login_user(data)
 
@@ -54,6 +59,7 @@ def login():
     except Exception as e:
         print(f"An error occurred: {e}")
         return make_response(jsonify({"error": "Internal Server Error"}), 500)
+
     
 
 
@@ -285,7 +291,8 @@ def handle_newuserstory():
             newuserstory, status = rpc.userstory_service.create_newuserstory(data)
             return make_response(jsonify(newuserstory)), status
         elif request.method == 'GET':
-            newuserstories, status = rpc.userstory_service.get_newuserstory()
+            project_id = request.args.get('project_id')
+            newuserstories, status = rpc.userstory_service.get_newuserstory(project_id)
             return make_response(jsonify(newuserstories)), status
 
 @app.route('/api/newuserstory/<user_id>', methods=['PUT', 'DELETE'])
@@ -361,4 +368,3 @@ def update_delete_sprint(sprint_id):
 
 if __name__ == '__main__':
     app.run(port=5000,debug=True)
-

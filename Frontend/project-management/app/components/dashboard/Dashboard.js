@@ -111,7 +111,8 @@
 
 
 
-"use client"
+'use client'
+
 import React, { useState, useEffect } from 'react';
 import Popup from '../popup/page';
 import ProjectCard from './ProjectCard';
@@ -126,7 +127,7 @@ const Dashboard = ({ projectNames, onClose }) => {
 
   const togglePopup = () => {
     setShowPopup(!showPopup);
-    setIsPopupVisible(!isPopupVisible); 
+    setIsPopupVisible(!isPopupVisible);
   };
 
   useEffect(() => {

@@ -151,34 +151,34 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     if (!email || !password) {
       setMessage("Please fill in all fields.");
       return;
     }
-
+  
     if (password.length < 6) {
       setMessage("Password must be at least 6 characters long.");
       return;
     }
-
+  
     try {
+      const payload = { email, password };
+      console.log("Request payload:", payload); // Log the request payload for debugging
+  
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
-        {
-          email,
-          password,
-        },
+        payload,
         { withCredentials: true }
       );
-
+  
       console.log("Login response:", response.data); // Log the response for debugging
-
+  
       if (response.status === 200 && response.data.email) {
         // Store email in session storage
         sessionStorage.setItem('email', response.data.email);
         console.log("Email stored:", sessionStorage.getItem('email')); // Verify storage
-
+  
         setLoading(true);
       } else {
         setMessage("Login failed: " + (response.data.message || "Unknown error"));
@@ -188,6 +188,7 @@ const Login = () => {
       setMessage("Login failed: " + (error.response?.data?.message || error.message));
     }
   };
+  
 
   if (loading) {
     return <LoadingScreen />;
