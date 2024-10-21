@@ -19,10 +19,17 @@ def favicon():
 @app.route('/app/api/auth/signup', methods=['POST'])
 def signup():
     data = request.get_json()
-    with ClusterRpcProxy(CONFIG) as rpc:
-        response, status_code = rpc.user_service.create_user(data)
-        # print(f"Signup response: {response}, status code: {status_code}")
-        return make_response(jsonify(response)), status_code
+    try:
+        if not data or 'email' not in data or 'password' not in data:
+            return make_response(jsonify({"message": "Please fill in all fields."}), 400)
+
+        with ClusterRpcProxy(CONFIG) as rpc:
+            response, status_code = rpc.user_service.create_user(data)
+            print(f"Signup response: {response}, status code: {status_code}")
+            return make_response(jsonify(response)), status_code
+    except Exception as e:
+        print(f"An error occurred: {e}")
+        return make_response(jsonify({"message": "Internal Server Error"}), 500)
     
     
 
@@ -30,35 +37,25 @@ def signup():
 def login():
     data = request.get_json()
     try:
-        print(f"Received data: {data}")  # Log received data for debugging
-
         if not data or 'email' not in data or 'password' not in data:
             return make_response(jsonify({"message": "Please fill in all fields."}), 400)
 
         with ClusterRpcProxy(CONFIG) as rpc:
             response, status_code = rpc.user_service.login_user(data)
-
-            if isinstance(response, dict):
-                for key, value in response.items():
-                    if isinstance(value, bytes):
-                        response[key] = value.decode('utf-8')
-
-            # Log the response for debugging
-            print(f"Login response: {response}")
-
+            print(f"Login response: {response}, status code: {status_code}")
             resp = make_response(jsonify(response), status_code)
 
             if status_code == 200:
                 resp.set_cookie(response['token'],
-                                httponly=True,
-                                samesite='None',
-                                secure=True)
+                               httponly=True,
+                               samesite='None',
+                               secure=True)
 
             return resp
-
     except Exception as e:
         print(f"An error occurred: {e}")
-        return make_response(jsonify({"error": "Internal Server Error"}), 500)
+        return make_response(jsonify({"message": "Internal Server Error"}), 500)
+
 
     
 

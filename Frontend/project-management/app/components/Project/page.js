@@ -2,8 +2,7 @@
  "use client"
 import React, { useState, useEffect } from 'react';
 import ProjectCard from '../dashboard/ProjectCard';
-import ProjectDetails from '../../projectdetails/page';
-import ListedTask from '../dashboard/ListedTask/page';
+import ListedTask from '../dashboard/ListedTask/[project_id]/page';
 
 const Project = () => {
   const [projects, setProjects] = useState([]);

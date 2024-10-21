@@ -163,7 +163,7 @@ const ListedTask = () => {
     <div className="fixed right-0 w-[calc(100%-200px)] h-full bg-[#c8d8e4] p-4 overflow-y-auto md:w-[calc(100%-200px)] md:right-0 w-full right-0">
       <div className="bg-white rounded-lg p-4 mb-4 w-full card flex justify-end items-center">
         <button
-          className="bg-[#007bff] text-white py-2 px-4 rounded hover:bg-[#0056b3]"
+          className="bg-[#007bff]  text-white py-2 px-4 rounded hover:bg-[#0056b3]"
           onClick={toggleOverlay}
         >
           User Story
@@ -246,18 +246,7 @@ const ListedTask = () => {
                     fullWidth
                   />
                 </div>
-                <div className="flex items-center">
-                  <div className="mr-4">0 Attachments</div>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    className="flex items-center"
-                  >
-                    <FontAwesomeIcon icon={faPaperclip} className="mr-2" />
-                    Drop attachments here!
-                    <input type="file" hidden />
-                  </Button>
-                </div>
+
                 <div>
                   <span className="block mb-2">POINTS</span>
                   <div className="flex flex-wrap gap-4">

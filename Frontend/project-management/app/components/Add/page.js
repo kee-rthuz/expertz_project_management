@@ -1,18 +1,4 @@
 
-//   1
-
-// import React from 'react';
-// import styles from './Add.module.css'
-
-// const Add = () => {
-//   return (
-//     <div className={styles.addPage}>
-
-//     </div>
-//   );
-// };
-
-// export default Add;
 
 
 

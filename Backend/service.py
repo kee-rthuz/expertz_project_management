@@ -63,8 +63,9 @@ class UserService(BaseService):
 
             return {'message': 'Signup successful', 'user': inserted_user, 'token': token_str}, 201
         except Exception as e:
-            print(e)
+            print(f"Signup error: {e}")
             return {'message': 'Internal Server Error'}, 500
+
 
     @rpc
     def login_user(self, data):
@@ -91,12 +92,10 @@ class UserService(BaseService):
                 self.secret_key,
                 algorithm='HS256'
             )
-
-            if isinstance(token, bytes):
-                token = token.decode('utf-8')
+            token_str = token.decode('utf-8')  # Ensure the token is a string
 
             token_data = {
-                'token': token,
+                'token': token_str,
                 'user_id': str(user['_id']),
                 'created_at': datetime.datetime.utcnow()
             }
@@ -104,10 +103,12 @@ class UserService(BaseService):
             token_data['_id'] = str(result.inserted_id)
 
             # Ensure email is included in the response
-            return {'message': 'Login successful', 'user': user, 'token': token, 'email': email}, 200
+            return {'message': 'Login successful', 'user': user, 'token': token_str, 'email': email}, 200
         except Exception as e:
             print(f"Login error: {e}")
             return {'message': 'Internal Server Error'}, 500
+
+
 
 
 
