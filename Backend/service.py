@@ -645,69 +645,69 @@ class UserStoryService(BaseService):
             print(f"Error deleting user story with user_id {user_id}: {e}")
             return {'error': 'Internal Server Error'}, 500
         
-class UserStorysubtaskService(BaseService):
-    name = "userstorysubtask_service"
-    newuserstorysubtask_collection = BaseService.db.get_collection('userstorysubtask')
+class TaskService(BaseService):
+    name = "task_service"
+    newtask_collection = BaseService.db.get_collection('task')
 
     @rpc
-    def create_newuserstorysubtask(self, data, user_id):
+    def create_newtask(self, data, user_id):
         try:
             print("Received data:", data)  # Add this line
-            newuserstorysubtask = {
+            newtask = {
                 'user_id': user_id,
                 'title': data.get('title', ''),
             }
-            result = self.newuserstorysubtask_collection.insert_one(newuserstorysubtask)
-            inserted_newuserstory = self.newuserstorysubtask_collection.find_one({'_id': result.inserted_id})
-            inserted_newuserstory['_id'] = str(inserted_newuserstory['_id'])
-            print("Inserted new user story subtask:", inserted_newuserstory)  # Add this line
-            return inserted_newuserstory, 200
+            result = self.newtask_collection.insert_one(newtask)
+            inserted_newtask = self.newtask_collection.find_one({'_id': result.inserted_id})
+            inserted_newtask['_id'] = str(inserted_newtask['_id'])
+            print("Inserted new task:", inserted_newtask)  # Add this line
+            return inserted_newtask, 200
         except Exception as e:
             print("Exception occurred:", e)  # Add this line
             return {'error': 'Internal Server Error'}, 500
 
     @rpc
-    def get_userstory_subtasks(self, user_id):
+    def get_userstory_tasks(self, user_id):
         print("user_id", user_id)
         try:
-            subtasks = list(self.newuserstorysubtask_collection.find({'user_id': user_id}))
-            for subtask in subtasks:
-                subtask['_id'] = str(subtask['_id'])  # Convert ObjectId to string
-            print(f"subtasks {subtasks}")
-            return subtasks, 200
+            tasks = list(self.newtask_collection.find({'user_id': user_id}))
+            for task in tasks:
+                task['_id'] = str(task['_id'])  # Convert ObjectId to string
+            print(f"tasks {tasks}")
+            return tasks, 200
         except Exception as e:
             print(e)
             return {'error': 'Internal Server Error'}, 500
-        
+
     @rpc
-    def update_userstorysubtask(self, subtask_id, data):
+    def update_userstorytask(self, task_id, data):
         try:
             print("Received data for update:", data)  # Add this line
-            update_result = self.newuserstorysubtask_collection.update_one(
-                {'_id': ObjectId(subtask_id)},
+            update_result = self.newtask_collection.update_one(
+                {'_id': ObjectId(task_id)},
                 {'$set': data}
             )
             if update_result.modified_count > 0:
-                updated_subtask = self.newuserstorysubtask_collection.find_one({'_id': ObjectId(subtask_id)})
-                updated_subtask['_id'] = str(updated_subtask['_id'])
-                print("Updated subtask:", updated_subtask)  # Add this line
-                return updated_subtask, 200
+                updated_task = self.newtask_collection.find_one({'_id': ObjectId(task_id)})
+                updated_task['_id'] = str(updated_task['_id'])
+                print("Updated task:", updated_task)  # Add this line
+                return updated_task, 200
             else:
-                return {'error': 'Subtask not found'}, 404
+                return {'error': 'Task not found'}, 404
         except Exception as e:
             print("Exception occurred:", e)  # Add this line
             return {'error': 'Internal Server Error'}, 500
 
     @rpc
-    def delete_userstorysubtask(self, subtask_id):
+    def delete_userstorytask(self, task_id):
         try:
-            print("Received subtask_id for delete:", subtask_id)  # Add this line
-            delete_result = self.newuserstorysubtask_collection.delete_one({'_id': ObjectId(subtask_id)})
+            print("Received task_id for delete:", task_id)  # Add this line
+            delete_result = self.newtask_collection.delete_one({'_id': ObjectId(task_id)})
             if delete_result.deleted_count > 0:
-                print("Deleted subtask with ID:", subtask_id)  # Add this line
-                return {'message': 'Subtask deleted successfully'}, 200
+                print("Deleted task with ID:", task_id)  # Add this line
+                return {'message': 'Task deleted successfully'}, 200
             else:
-                return {'error': 'Subtask not found'}, 404
+                return {'error': 'Task not found'}, 404
         except Exception as e:
             print("Exception occurred:", e)  # Add this line
             return {'error': 'Internal Server Error'}, 500

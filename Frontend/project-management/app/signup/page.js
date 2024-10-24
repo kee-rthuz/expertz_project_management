@@ -1,6 +1,3 @@
-
-
-
 "use client";
 import { useState } from "react";
 import axios from "axios";
@@ -33,8 +30,12 @@ const Signup = () => {
       return;
     }
 
-    if (password.length < 6) {
-      setMessage("Password must be at least 6 characters long.");
+    // Password validation: Minimum 8 characters, at least one uppercase, one lowercase, one digit, and one special character
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      setMessage(
+        "Password must be at least 8 characters long, with at least one uppercase letter, one lowercase letter, one number, and one special character."
+      );
       return;
     }
 
@@ -101,7 +102,7 @@ const Signup = () => {
             className="w-full"
           />
           <TextField
-            label="Password (min. 6 characters)"
+            label="Password (min. 8 characters, uppercase, lowercase, number, special character)"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -110,7 +111,7 @@ const Signup = () => {
           />
           <div className="flex justify-center">
             <Button
-              type="submit" // Changed from type="signup"
+              type="submit"
               variant="contained"
               style={{
                 backgroundColor: "#000",

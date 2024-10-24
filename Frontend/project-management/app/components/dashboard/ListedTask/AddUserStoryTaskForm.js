@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
-const AddUserStorySubtaskForm = ({ onClose, userStoryId }) => {
+const AddUserStoryTaskForm = ({ onClose, userStoryId, onTaskCreated }) => {
   const [title, setTitle] = useState("");
 
   const handleSubmit = async (e) => {
@@ -10,7 +10,7 @@ const AddUserStorySubtaskForm = ({ onClose, userStoryId }) => {
 
     try {
       const response = await fetch(
-        `http://localhost:5000/api/userstory_subtasks/`,
+        `http://localhost:5000/api/userstory_tasks/`,
         {
           method: "POST",
           headers: {
@@ -25,15 +25,15 @@ const AddUserStorySubtaskForm = ({ onClose, userStoryId }) => {
 
       if (response.ok) {
         alert("Submitted successfully");
-        console.log("Subtask added:", data);
-        
+        console.log("Task added:", data);
+
+        onTaskCreated(data);
         onClose();
-        window.location.reload();
       } else {
         alert(`Failed to submit: ${data.error}`);
       }
     } catch (error) {
-      console.error("Error creating Subtask:", error);
+      console.error("Error creating Task:", error);
       alert("An error occurred");
     }
   };
@@ -48,7 +48,7 @@ const AddUserStorySubtaskForm = ({ onClose, userStoryId }) => {
 
   return (
     <div>
-      <h3 className="text-lg font-bold mb-4">Add SubTask</h3>
+      <h3 className="text-lg font-bold mb-4">Add Task</h3>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <TextField
@@ -93,4 +93,4 @@ const AddUserStorySubtaskForm = ({ onClose, userStoryId }) => {
   );
 };
 
-export default AddUserStorySubtaskForm;
+export default AddUserStoryTaskForm;

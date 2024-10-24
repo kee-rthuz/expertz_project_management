@@ -21,6 +21,8 @@ import {
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 import { AiOutlineComment } from "react-icons/ai";
+import { Plus } from 'lucide-react';
+
 import TaskForm from "./TaskPageForm";
 import TextField from "@mui/material/TextField";
 import AddSubtaskForm from "./AddSubtaskForm"; // Import the AddSubtaskForm component
@@ -760,15 +762,16 @@ export default function ViewDetails({ project, onClose, onBid }) {
                         <FontAwesomeIcon icon={faTrashAlt} className="text-gray-600" />
                       </button>
                       <button
-                        className="p-1 rounded hover:bg-gray-200 ml-2"
+                        className="p-1.5 bg-teal-400 text-white ml-2 rounded-md hover:bg-teal-500 transition-colors"
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedTaskRowId(task._id);
                           handleOpenAddSubtaskForm();
                         }}
                       >
-                        <FontAwesomeIcon icon={faPlusCircle} className="text-gray-600" />
-                      </button>
+            <Plus className="w-4 h-4" />
+            </button>
+
                       <AiOutlineComment
                         className="ml-4 text-gray-600 cursor-pointer text-lg block sm:hidden"
                       />
@@ -840,8 +843,8 @@ export default function ViewDetails({ project, onClose, onBid }) {
                   className="text-[#a09e9e] py-2 px-4 rounded hover:text-[#007bff]"
                   onClick={handleQuickTaskAdd}
                 >
-                  <FontAwesomeIcon icon={faPlus} />
-                </button>
+                    <FontAwesomeIcon icon={faSave} />
+                    </button>
                 <button
                   className="text-[#a09e9e] py-2 px-4 rounded hover:text-red-600"
                   onClick={handleQuickTaskAddClose}

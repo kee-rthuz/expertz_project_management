@@ -2,14 +2,6 @@
 
 
 
-
-
-
-
-
-
-
-
 "use client";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -44,8 +36,8 @@ const Login = () => {
       return;
     }
   
-    if (password.length < 6) {
-      setMessage("Password must be at least 6 characters long.");
+    if (password.length < 8) {
+      setMessage("Password must be at least 8 characters long.");
       return;
     }
   
@@ -98,7 +90,7 @@ const Login = () => {
             className="w-full"
           />
           <TextField
-            label="Password (min. 6 characters)"
+            label="Password (min. 8 characters)"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
