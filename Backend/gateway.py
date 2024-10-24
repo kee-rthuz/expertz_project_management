@@ -306,35 +306,35 @@ def update_delete_newuserstory(user_id):
 
 #userstorysubtask
 
-@app.route('/api/userstory_tasks/', methods=['POST'])
-def handle_newuserstorytask():
+@app.route('/api/userstory_subtasks/', methods=['POST'])
+def handle_newuserstorysubtask():
     with ClusterRpcProxy(CONFIG) as rpc:
         if request.method == 'POST':
             data = request.json
             user_id = data.get('user_id')
-            print("id", user_id)  # Log the received data
-            newtask, status = rpc.task_service.create_newtask(data, user_id)
-            return make_response(jsonify(newtask)), status
-
-@app.route('/api/userstory_tasks/<user_id>', methods=['GET'])
-def get_userstorytasks(user_id):
+            print("id",id )  # Log the received data
+            newuserstorysubtask, status = rpc.userstorysubtask_service.create_newuserstorysubtask(data,user_id)
+            return make_response(jsonify(newuserstorysubtask)), status
+        
+@app.route('/api/userstory_subtasks/<user_id>', methods=['GET'])
+def get_userstorysubtasks(user_id):
     with ClusterRpcProxy(CONFIG) as rpc:
-        tasks, status = rpc.task_service.get_userstory_tasks(user_id)
-    return make_response(jsonify(tasks)), status
+        subtasks, status = rpc.userstorysubtask_service.get_userstory_subtasks(user_id)
+    return make_response(jsonify(subtasks)), status
 
-@app.route('/api/userstory_tasks/<task_id>', methods=['PUT'])
-def update_userstorytask(task_id):
+@app.route('/api/userstory_subtasks/<subtask_id>', methods=['PUT'])
+def update_userstorysubtask(subtask_id):
     with ClusterRpcProxy(CONFIG) as rpc:
         if request.method == 'PUT':
             data = request.json
-            updated_task, status = rpc.task_service.update_userstorytask(task_id, data)
-            return make_response(jsonify(updated_task)), status
+            updated_subtask, status = rpc.userstorysubtask_service.update_userstorysubtask(subtask_id, data)
+            return make_response(jsonify(updated_subtask)), status
 
-@app.route('/api/userstory_tasks/<task_id>', methods=['DELETE'])
-def delete_userstorytask(task_id):
+@app.route('/api/userstory_subtasks/<subtask_id>', methods=['DELETE'])
+def delete_userstorysubtask(subtask_id):
     with ClusterRpcProxy(CONFIG) as rpc:
         if request.method == 'DELETE':
-            response, status = rpc.task_service.delete_userstorytask(task_id)
+            response, status = rpc.userstorysubtask_service.delete_userstorysubtask(subtask_id)
             return make_response(jsonify(response)), status
 
 #newsprint

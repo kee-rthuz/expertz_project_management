@@ -358,6 +358,12 @@
 
 
 
+
+
+
+// sub task to task
+// ----------------
+
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -379,7 +385,7 @@ const UserStory = ({ params }) => {
   const searchParams = useSearchParams();
   const subject = searchParams.get('subject');
   const userStoryId = params?.id;
-
+  
   const [tasks, setTasks] = useState([]);
   const [showAddTaskForm, setShowAddTaskForm] = useState(false);
   const [editedTask, setEditedTask] = useState(null);
@@ -390,7 +396,7 @@ const UserStory = ({ params }) => {
   useEffect(() => {
     const fetchTasks = async () => {
       if (!userStoryId) return;
-
+      
       try {
         const response = await fetch(`http://localhost:5000/api/userstory_tasks/${userStoryId}`);
         if (response.ok) {
@@ -490,7 +496,7 @@ const UserStory = ({ params }) => {
 
   const handleSubjectSave = async () => {
     if (!userStoryId) return;
-
+    
     try {
       const response = await fetch(
         `http://localhost:5000/api/newuserstory/${userStoryId}`,
@@ -518,7 +524,7 @@ const UserStory = ({ params }) => {
 
   const handleSubjectDelete = async () => {
     if (!userStoryId) return;
-
+    
     try {
       const response = await fetch(
         `http://localhost:5000/api/newuserstory/${userStoryId}`,
@@ -625,7 +631,7 @@ const UserStory = ({ params }) => {
         {/* Tasks Header */}
         <div className="flex justify-between items-center p-3 sm:p-4 border-b">
           <span className="font-medium">Tasks</span>
-          <button
+          <button 
             className="p-1.5 bg-teal-400 text-white rounded-md hover:bg-teal-500 transition-colors"
             onClick={handleOpenAddTaskForm}
           >
@@ -651,8 +657,8 @@ const UserStory = ({ params }) => {
           {/* Tasks List */}
           <div className="space-y-2">
             {tasks.map((task) => (
-              <div
-                key={task._id}
+              <div 
+                key={task._id} 
                 className="bg-gray-50 rounded-md p-3 hover:bg-gray-100 transition-colors"
               >
                 {editedTask && editedTask._id === task._id ? (
@@ -682,13 +688,13 @@ const UserStory = ({ params }) => {
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <h4 className="font-medium text-gray-800">{task.title}</h4>
                     <div className="flex items-center gap-2">
-                      <button
+                      <button 
                         className="flex-1 sm:flex-none text-sm text-gray-600 hover:text-teal-600 font-medium px-2 py-1 rounded-md hover:bg-gray-200 transition-colors"
                         onClick={() => handleEditTask(task)}
                       >
                         <FontAwesomeIcon icon={faEdit} />
                       </button>
-                      <button
+                      <button 
                         className="flex-1 sm:flex-none text-sm text-gray-600 hover:text-red-600 font-medium px-2 py-1 rounded-md hover:bg-gray-200 transition-colors"
                         onClick={() => handleTaskDelete(task._id)}
                       >
